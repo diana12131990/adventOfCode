@@ -4,4 +4,8 @@
 # Wing IDE project file                                          #
 ##################################################################
 [project attributes]
+proj.file-list = [loc('Day01/day_1_1.py'),
+                  loc('Day01/day_1_2.py'),
+                  loc('Day02/day_2_1.py'),
+                  loc('Day02/day_2_2.py')]
 proj.file-type = 'shared'
