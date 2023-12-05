@@ -16,5 +16,7 @@ proj.file-list = [loc('Day01/day_1_1.py'),
                   loc('Day02/day_2_1.py'),
                   loc('Day02/day_2_2.py'),
                   loc('Day04/day_4_1.py'),
-                  loc('Day04/day_4_2.py')]
+                  loc('Day04/day_4_2.py'),
+                  loc('Day05/day_5_1.py'),
+                  loc('Day05/day_5_2.py')]
 proj.file-type = 'shared'
