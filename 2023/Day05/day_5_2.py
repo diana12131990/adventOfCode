@@ -18,6 +18,7 @@ def Converter(c_map):
         s_start = source_data[i][0]
         s_end = source_data[i][1]
         
+        # Get Overlap Range and assign to destination data
         i_range = range(max(c_start,s_start), min(c_end,s_end)+1)
         if (len(i_range)!=0):
             d_start = i_range[0] + diff
@@ -30,7 +31,6 @@ def Converter(c_map):
                     source_data[i][1] = -1
                 else:                                            #s_end > i_range[-1]
                     source_data[i][0] = i_range[-1]+1
-                    
             else:                                                #s_start < i_range[0]
                 if s_end == i_range[-1]:                
                     source_data[i][1] = i_range[0]-1
@@ -52,19 +52,18 @@ for line in f:
             y = x+1
             
             s_start = int(s_info[x])
-            s_end = s_start+int(s_info[y])-1
+            s_end = s_start + int(s_info[y])-1
             
-            source_data.update({i:[s_start,s_end]})
+            source_data.update({i : [s_start,s_end]})
             
                
     elif re.search("map",line):
         
-        if (len(destination_data)!=0):
-            
-            for i in source_data:
+        # If we have converted data, transfer to source before running next map info
+        if (len(destination_data)!=0): 
+            for i in source_data:               # merge
                 if source_data[i][0] != -1:
                     destination_data.update({len(destination_data) : source_data[i]})
-                
             source_data = destination_data.copy()
             destination_data.clear()
             
@@ -78,9 +77,11 @@ for i in source_data:
     if source_data[i][0] != -1:
         destination_data.update({len(destination_data) : source_data[i]})
 
+
 location = []
 for i in destination_data:
     location.append(destination_data[i][0])
-    
 print(min(location))
+
+
 f.close()
