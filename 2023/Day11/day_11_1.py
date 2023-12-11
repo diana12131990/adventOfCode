@@ -29,7 +29,7 @@ for index in range(len(sky_map[0])):
     if not has_star:
         no_star_index.append(index)
 
-# Get each star position
+# Update sky_map by no star in column and get each star position
 for x in range(i):
     line = sky_map[x]
     for index in range(len(no_star_index)):
