@@ -22,56 +22,23 @@ def DetectMirrorline(pattern,pos):
 def GetReflectionSum(pattern):
     Found = False
     # Find mirror pos in row
-    mirror_pos = (len(pattern) - 1)//2
-    if DetectMirrorline(pattern, mirror_pos):
-        Found = True
-    else:
-        left_pos = mirror_pos - 1
-        right_pos = mirror_pos + 1
-        while not Found and (left_pos >=0 or right_pos <= (len(pattern) - 2)):
-            if left_pos >= 0:
-                Found = DetectMirrorline(pattern, left_pos)
-                if Found:
-                    mirror_pos = left_pos
-                    break
-                else:
-                    left_pos -= 1
-                    
-            if right_pos <= (len(pattern) - 2):
-                Found = DetectMirrorline(pattern, right_pos)
-                if Found:
-                    mirror_pos = right_pos
-                    break
-                else:
-                    right_pos += 1
-    if Found:
-        return (mirror_pos + 1)*100
-    else:
-        # Find mirror pos in colume
-        mirror_pos = (len(pattern[0]) - 1)//2
-        if DetectMirrorPos(pattern, mirror_pos):
+    mirror_pos = 0
+    while not Found and mirror_pos <= (len(pattern) - 2):
+        Found = DetectMirrorline(pattern, mirror_pos)
+        if Found:
+            return (mirror_pos + 1)*100
+        else:
+            mirror_pos += 1
+            
+    # Find mirror pos in colume
+    mirror_pos = 0
+    while not Found and mirror_pos <= (len(pattern[0]) - 2):
+        Found = DetectMirrorPos(pattern, mirror_pos)
+        if Found:
             return mirror_pos+1
         else:
-            left_pos = mirror_pos - 1
-            right_pos = mirror_pos + 1
-            while left_pos >=0 or right_pos <= (len(pattern[0]) - 2):
-                if left_pos >= 0:
-                    Found = DetectMirrorPos(pattern, left_pos)
-                    if Found:
-                        mirror_pos = left_pos
-                        break
-                    else:
-                        left_pos -= 1
-                        
-                if right_pos <= (len(pattern[0]) - 2):
-                    Found = DetectMirrorPos(pattern, right_pos)
-                    if Found:
-                        mirror_pos = right_pos
-                        break
-                    else:
-                        right_pos += 1                
-            return mirror_pos+1
-    
+            mirror_pos += 1
+
     
 pattern = []
 reflection_sum = 0
@@ -85,6 +52,6 @@ for line in f:
     else:
         pattern.append(line)
 
-reflection_sum += GetReflectionSum(pattern)    
+reflection_sum += GetReflectionSum(pattern)   
 print(reflection_sum)
 f.close()
