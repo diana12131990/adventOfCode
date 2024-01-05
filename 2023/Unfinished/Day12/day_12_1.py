@@ -63,8 +63,10 @@ for line in f:
     row,numbers = re.split(" ",line)
     numbers = re.findall(r'\d+',numbers)
     numbers = [int(x) for x in numbers]
-    
-    total_possible += CalculatePossiblility(0,0)
+    print(row,numbers)
+    possible = CalculatePossiblility(0,0)
+    print(possible)
+    total_possible += possible
 f.close()
 
 print(total_possible)
