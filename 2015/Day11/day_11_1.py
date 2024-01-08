@@ -1,4 +1,3 @@
-import re
 from itertools import groupby
 
 password = [x for x in "hxbxwxba"]

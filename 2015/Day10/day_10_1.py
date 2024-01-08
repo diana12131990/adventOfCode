@@ -1,5 +1,3 @@
-import re
-
 line = "1113222113"
 
 for i in range(40):

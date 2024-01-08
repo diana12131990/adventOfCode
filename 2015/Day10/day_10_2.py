@@ -1,4 +1,3 @@
-import re
 from itertools import groupby
 
 line = "1113222113"
