@@ -135,5 +135,11 @@ proj.directory-list = [{'dirloc': loc('Day02'),
                         'filter': u'*',
                         'include_hidden': False,
                         'recursive': False,
+                        'watch_for_changes': True},
+                       {'dirloc': loc('Day25'),
+                        'excludes': (),
+                        'filter': u'*',
+                        'include_hidden': False,
+                        'recursive': False,
                         'watch_for_changes': True}]
 proj.file-type = 'shared'
