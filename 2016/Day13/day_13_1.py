@@ -1,3 +1,6 @@
+favorite_num = 1364
+shortest_path = -1
+
 def CountOneInBinary(x,y):
     value = bin(x*x + 3*x + 2*x*y + y + y*y + favorite_num)
     one_amount = value.count("1")
@@ -24,11 +27,84 @@ def AddColumn(c_target):
             else:
                 building_map[y].append("#")            
 
-def FindSteps(m,i,j):
-    if j >= len(building_map[0])-1:
-        AddColumn(j)
+def FindSteps(i,j,d,s):
+    global shortest_path
+    
+    if i == 39 and j== 31:
+        if shortest_path == -1 or shortest_path > s:
+            shortest_path = s
+    else:
+        s += 1
+        if shortest_path == -1 or shortest_path > s:
+            if j >= len(building_map[0])-1:
+                AddColumn(j)
+            if i >= len(building_map)-1:
+                AddRow(i)
+            
+            if d == ">":
+                if building_map[i][j+1] == ".":
+                    building_map[i][j+1] = "O"
+                    FindSteps(i,j+1,">",s)
+                    building_map[i][j+1] = "."
+                    
+                if building_map[i+1][j] == ".":
+                    building_map[i+1][j] = "O"
+                    FindSteps(i+1,j,"v",s)
+                    building_map[i+1][j] = "."
+                    
+                if building_map[i-1][j] == ".":
+                    building_map[i-1][j] = "O"
+                    FindSteps(i-1,j,"^",s)
+                    building_map[i-1][j] = "."
+                    
+            if d == "v":
+                if building_map[i][j+1] == ".":
+                    building_map[i][j+1] = "O"
+                    FindSteps(i,j+1,">",s)
+                    building_map[i][j+1] = "."
+                    
+                if building_map[i+1][j] == ".":
+                    building_map[i+1][j] = "O"
+                    FindSteps(i+1,j,"v",s)
+                    building_map[i+1][j] = "."
+                    
+                if building_map[i][j-1] == ".":
+                    building_map[i][j-1] = "O"
+                    FindSteps(i,j-1,"<",s)
+                    building_map[i][j-1] = "."
+                    
+            if d == "<":
+                if building_map[i+1][j] == ".":
+                    building_map[i+1][j] = "O"
+                    FindSteps(i+1,j,"v",s)
+                    building_map[i+1][j] = "."
+                    
+                if building_map[i][j-1] == ".":
+                    building_map[i][j-1] = "O"
+                    FindSteps(i,j-1,"<",s)
+                    building_map[i][j-1] = "."
+                    
+                if building_map[i-1][j] == ".":
+                    building_map[i-1][j] = "O"
+                    FindSteps(i-1,j,"^",s)
+                    building_map[i-1][j] = "."  
+                    
+            if d == "^":
+                if building_map[i][j+1] == ".":
+                    building_map[i][j+1] = "O"
+                    FindSteps(i,j+1,">",s)
+                    building_map[i][j+1] = "."
+                    
+                if building_map[i][j-1] == ".":
+                    building_map[i][j-1] = "O"
+                    FindSteps(i,j-1,"<",s)
+                    building_map[i][j-1] = "."
+                    
+                if building_map[i-1][j] == ".":
+                    building_map[i-1][j] = "O"
+                    FindSteps(i-1,j,"^",s)
+                    building_map[i-1][j] = "."         
 
-favorite_num = 1364
 i = 1
 j = 1
 building_map = []
@@ -41,5 +117,26 @@ for y in range(70):
         else:
             building_map[y].append("#")
 
-building_map[39][31] = "E"
 
+building_map[i][j] = "O"
+if building_map[i][j+1] == ".":
+    building_map[i][j+1] = "O"
+    FindSteps(i,j+1,">",1)
+    building_map[i][j+1] = "."
+    
+if building_map[i+1][j] == ".":
+    building_map[i+1][j] = "O"
+    FindSteps(i+1,j,"v",1)
+    building_map[i+1][j] = "."
+    
+if building_map[i][j-1] == ".":
+    building_map[i][j-1] = "O"
+    FindSteps(i,j-1,"<",1)
+    building_map[i][j-1] = "."
+    
+if building_map[i+1][j] == ".":
+    building_map[i+1][j] = "O"
+    FindSteps(i+1,j,"^",1)
+    building_map[i+1][j] = "."
+    
+print(shortest_path)
