@@ -5,6 +5,7 @@ f = open("day_16_input.txt","r")
 line = f.readline()
 line = line.strip()
 dance_move = line.split(",")
+f.close()
 
 program = ''.join(chr(i) for i in range(ord('a'),ord('p')+1))
 
