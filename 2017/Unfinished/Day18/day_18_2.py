@@ -24,6 +24,7 @@ j = 0
 p1_running = True
 p1_send_amount = []
 
+
 def running_instruction(program, program_id, index):
     line = instructions[index]
     action = line[0]
@@ -54,7 +55,10 @@ def running_instruction(program, program_id, index):
         if line[2].isdigit() or line[2][0] == "-":
             program[line[1]] += int(line[2])
         else:
-            program[line[1]] += program[line[2]]
+            if line[2] not in program:
+                program.update({line[2]:0})
+            else:
+                program[line[1]] += program[line[2]]
         return (program,index+1,True) 
     
     elif action == "mul":                                       # Multiply Y to X's Value
@@ -64,6 +68,8 @@ def running_instruction(program, program_id, index):
             if line[2].isdigit() or line[2][0] == "-":
                 program[line[1]] *= int(line[2])
             else:
+                if line[2] not in program:
+                    program.update({line[2]:0})                
                 program[line[1]] *= program[line[2]]
         return (program,index+1,True) 
         
@@ -74,10 +80,16 @@ def running_instruction(program, program_id, index):
             if line[2].isdigit() or line[2][0] == "-":
                 program[line[1]] %= int(line[2])
             else:
-                program[line[1]] %= program[line[2]]
+                if line[2] not in program:
+                    program.update({line[2]:0})
+                else:
+                    program[line[1]] %= program[line[2]]
         return (program,index+1,True)
     
     elif action == "rcv":                                       # receive value from other's queue and set to X
+        if line[1] not in program:
+            program.update({line[1]:0})
+            
         if program_id == 0:
             if program_send_1 != []:
                 program.update({line[1]:program_send_1[0]})
@@ -91,7 +103,7 @@ def running_instruction(program, program_id, index):
                 program_send_0.pop(0)
                 return (program,index+1,True)
             else:
-                return (program,index,False)                        
+                return (program,index,False)
     
     elif action == "jgz":                                       # Jump instruction
         if line[1] in program:
@@ -107,9 +119,16 @@ def running_instruction(program, program_id, index):
         
 
 while p0_running or p1_running:
-    (program_0,i,p0_running) = running_instruction(program_0,0,i)
-    print("0",program_0,len(program_send_0),i)
-    (program_1,j,p1_running) = running_instruction(program_1,1,j)
-    print("1",program_1,len(program_send_1),j)
+    if i < len(instructions):
+        (program_0,i,p0_running) = running_instruction(program_0,0,i)
+        print("0",program_0,len(program_send_0),i)
+    else:
+        p0_running = False
+        
+    if j < len(instructions):
+        (program_1,j,p1_running) = running_instruction(program_1,1,j)
+        print("1",program_1,len(program_send_1),j)
+    else:
+        p1_running = False
         
 print(len(p1_send_amount))
