@@ -1,21 +1,24 @@
 import re
 
-f = open("day_3_test_input.txt","r")
+fabris = [[None]*1000 for _ in range(1000)]
 
-fabris = [[None]*8 for _ in range(8)]
+elf_fabric = [False]
 
-elf_list = []
-
+f = open("day_3_input.txt","r")
 for line in f:
     numbers = [int(n) for n in re.findall(r'\d+',line)]
-    elf_list.append[True];
+    elf_fabric.append(True)
     for j in range(numbers[1],numbers[1]+numbers[3]):
         for i in range(numbers[2],numbers[2]+numbers[4]):
             if not fabris[i][j]:
                 fabris[i][j] = [numbers[0]]
             else:
                 fabris[i][j].append(numbers[0])
+            
+            if len(fabris[i][j])>1:
+                for n in fabris[i][j]:
+                    if elf_fabric[int(n)]:
+                        elf_fabric[int(n)] = False
+f.close()
 
-
-    for line in fabris:
-        print(line)
+print(elf_fabric.index(True))

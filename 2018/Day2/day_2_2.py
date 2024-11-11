@@ -21,4 +21,5 @@ for x in range(len(id_list)-1):
         if len(same_characters) > len(common_letters):
             common_letters = same_characters
 
+f.close()
 print(common_letters)

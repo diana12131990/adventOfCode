@@ -29,5 +29,5 @@ for line in f:
 
         if count_2_found and count_3_found:
             break
-
+f.close()
 print(count_2*count_3)
