@@ -18,10 +18,13 @@ def Change(stone):
         return [str(int(stone)*2024)]
 
 stone_dict = {}
+
+# Add stone file from the input first, and make their history 0 (init) to have 1
 for s in stones:
     stone_dict.update({s:{'next': Change(s), 'history': {x:0 for x in range(total_blink_time+1)}}})
     stone_dict[s]['history'][0] = 1
 
+# Add all the other stone that might be created in the future into the dictionary
 GetAllStone = False
 while not GetAllStone:
     GetAllStone = True
@@ -32,17 +35,17 @@ while not GetAllStone:
                 GetAllStone = False
                 stone_dict.update({s:{'next': Change(s), 'history': {x:0 for x in range(total_blink_time+1)}}})
 
-
 # record how many times each one appears at each blink
 for time in range(total_blink_time):
-    previous_stones = {}
-    for stone, info in stone_dict.items():
+    # If the stone show in this round
+    # find their result in the next run
+    # add the this round's stone amount of number to the next round
+    for info in stone_dict.values():
         if info['history'][time] > 0:
-            previous_stones.update({stone:info})
-    for stone_info in previous_stones.values():
-        for stone_num in stone_info['next']:
-            stone_dict[stone_num]['history'][time+1] += stone_info['history'][time]
-            
-            
-# Print the number of stones that appear in the data for the final blink!
-print(sum([data['history'][total_blink_time] for data in stone_dict.values()]))
+            for s in info['next']:
+                stone_dict[s]['history'][time+1] += info['history'][time]
+
+total_stone = 0
+for data in stone_dict.values():
+    total_stone += data['history'][total_blink_time]
+print(total_stone)
