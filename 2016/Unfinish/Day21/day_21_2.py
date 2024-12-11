@@ -1,92 +1,40 @@
 import re
 
-string = "fbgdceah"
-string = [x for x in string]
+password = "fbgdceah"
+password = list(password)
 
-f = open("day_21_input.txt","r")
-instruction = []
+with open('day_21_input.txt', 'r') as file:
+    lines = file.readlines()
 
-for line in f:
-    line = line.strip()
-    instruction.append(line)
-f.close()
-
-for line in reversed(instruction):
-    if "swap" in line:
-        
-        if "position" in line:
-            numbers = re.findall("\d+",line)
-            i = int(numbers[0])
-            j = int(numbers[1])
-            char = string[i]
-            string[i] = string[j]
-            string[j] = char
-            
-        elif "letter" in line:
-            line = line.replace("swap ","")
-            line = line.replace("letter ","")
-            start,end = re.split(" with ",line)
-            for i in range(len(string)):
-                if string[i] == start:
-                    string[i] = end
-                elif string[i] == end:
-                    string[i] = start
-                    
-    elif "rotate" in line:
-        step = 0
-        
-        if "position" in line:
-            char = line[-1]
-            for i in range(len(string)):
-                if string[i] == char:
-                    step = i
-                    break
-            if step == 0 or step >= 7:
-                step += 1
-            else:
-                step -= 1
-            step *= -1                
-        
+for instruction in reversed(lines):
+    inst = instruction.split()
+    if 'swap position' in instruction:
+        x, y = int(inst[2]), int(inst[5])
+        password[x], password[y] = password[y], password[x]
+    elif 'swap letter' in instruction:
+        x, y = password.index(inst[2]), password.index(inst[5])
+        password[x], password[y] = password[y], password[x]
+    elif 'rotate based' in instruction:
+        i = password.index(inst[-1])
+        if i % 2 == 0:
+            rotation = (i + 2) / 2 if i != 0 else 9
         else:
-            n = re.findall("\d+",line)
-            step = int(n[0])
-            if "Right" in line:
-                step *= -1
-        
-        new_string = [""]*len(string)
-        for i in range(len(string)):
-            j = i + step
-            if j >= len(string):
-                j %= len(string)
-            elif j < 0:
-                j += len(string)
-            new_string[j] = string[i]
-        string = []
-        for x in new_string:
-            string.append(x)
-        
-    elif "reverse" in line:
-        numbers = re.findall("\d+",line)
-        start = int(numbers[0])
-        end = int(numbers[1])
-        new_string = []
-        for i in range(start):
-            new_string.append(string[i])
-        for i in reversed(range(start,end+1)):
-            new_string.append(string[i])
-        for i in range(end+1,len(string)):
-            new_string.append(string[i])
-        string = []
-        for x in new_string:
-            string.append(x)        
-            
-    elif "move" in line:
-        numbers = re.findall("\d+",line)
-        start = int(numbers[0])
-        end = int(numbers[1])
-        char = string[end]
-        string.pop(end)
-        string.insert(start,char)
+            rotation = i / 2 + 1
+        rotation = int(rotation % len(password))
+        password = password[rotation:] + password[:rotation]
+    elif 'rotate' in instruction:
+        steps = int(inst[2])
+        if 'left' in inst[1]:
+            password = password[-steps:] + password[:-steps]
+        else:
+            password = password[steps:] + password[:-steps]
+    elif 'reverse positions' in instruction:
+        x, y = int(inst[2]), int(inst[4])
+        password = password[:x] + password[x:y+1][::-1] + password[y+1:]
+    elif 'move' in instruction:
+        x = int(inst[2])
+        y = int(inst[5])
+        letter = password.pop(x)
+        password.insert(y, letter)
 
-
-print("".join(string))
+print("".join(password))
