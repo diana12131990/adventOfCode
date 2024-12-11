@@ -1,132 +1,53 @@
 import re
 
 f = open("day_25_input.txt","r")
-original_a = 16818
 
-instructions = []
+def execute(program, a_value):
+    registers = { 'a': a_value, 'b': 0, 'c': 0, 'd': 0 }
+    clock = []
+    
+    pc = 0
+    while pc < len(program):
+        instr = program[pc]
+        if instr.startswith('cpy'):
+            _, src, dst = instr.split()
+            if src in registers:
+                registers[dst] = registers[src]
+            else:
+                registers[dst] = int(src)
+            pc += 1
+        if instr.startswith('inc'):
+            reg = instr.split()[1]
+            registers[reg] += 1
+            pc += 1
+        elif instr.startswith('dec'):
+            reg = instr.split()[1]
+            registers[reg] -= 1
+            pc += 1
+        elif instr.startswith('jnz'):
+            _, X, Y = re.split(' |,', instr)
+            if (X in registers and registers[X] != 0) or (X not in registers and int(X) != 0):
+                pc += int(Y)
+            else:
+                pc += 1
+        elif instr.startswith('out'):
+            reg = instr.split()[1]
+            clock.append(registers[reg])
+            if len(clock) > 2 and clock[-1] != (clock[-2] ^ 1):
+                return False
+            pc += 1
+            
+    return True
+
+bl = []
 for line in f:
     line = line.strip()
-    line = line.split()
-    instructions.append(line)
-    
+    bl.append(line)
 f.close()
 
-def DoCopy(source, target):
-    if not password.has_key(target):
-        password.update({target:0})
-    if source.isdigit() or "-" in source:
-        password[target] = int(source)
-    else:
-        if not password.has_key(source):
-            password.update({source:0})
-        password[target] = password[source]
-        
-def DoIncrease(target,step):
-    if not password.has_key(target):
-        password.update({target:0})
-    password[target] += step
-    
-def DoDecrease(target,step):
-    if not password.has_key(target):
-        password.update({target:0})
-    password[target] -= step
-    
-def DoJump(condition,step,original):
-    check_num = 0
-    if condition.isdigit() or "-" in condition:
-        check_num = int(condition)
-    else:
-        if not password.has_key(condition):
-            password.update({condition:0}) 
-        check_num = password[condition]
-        
-    if step.isdigit() or "-" in step:
-        step = int(step)
-    else:
-        if not password.has_key(step):
-            password.update({step:0}) 
-        step = password[step]  
-                
-    if  check_num != 0:
-        if step > 0:
-            return original + step
-        elif step < 0:
-            new_i = original + step
-            instruct_for_jump = []
-            conditions = [condition]
-            loop_amount = 1
-            for x in range(new_i,original):
-                if instructions[x][0] == "cpy":
-                    conditions.append(instructions[x][2])
-                    DoCopy(instructions[x][1],instructions[x][2])
-                elif instructions[x][0] == "inc" or instructions[x][0] == "dec":
-                    if instructions[x][1] not in conditions:
-                        instruct_for_jump.append(instructions[x])
-                    else:
-                        loop_amount *= abs(password[instructions[x][1]])
-                else:
-                    print("skip" + str(instructions[x]))
-                    
-            for l in instruct_for_jump:
-                if l[0] == "inc":
-                    DoIncrease(l[1],loop_amount)
-                elif l[0] == "dec":
-                    DoDecrease(l[1],loop_amount)
-                else:
-                    print("error")
-            for x in conditions:
-                password[x] = 0
-            return original + 1                
-    else:
-        return original + 1
-
-
-Finish = False
-while not Finish:
-    password= {
-        "a":original_a
-    }
-    Skip = False
-    while True:
-        i = 0
-        output = []
-        while i < len(instructions):
-            line = instructions[i]
-            action = line[0]
-            if action == "cpy":
-                DoCopy(line[1],line[2])
-                i += 1
-                
-            elif action == "inc":
-                DoIncrease(line[1],1)
-                i += 1
-                
-            elif action == "dec":
-                DoDecrease(line[1],1)
-                i += 1
-                
-            elif action == "jnz":
-                i = DoJump(line[1],line[2],i)
-                
-            elif action == "out":
-                if password[line[1]] == 0 or password[line[1]] == 1:
-                    if output == [] or output[-1] != str(password[line[1]]):
-                        output.append(str(password[line[1]]))
-                    else:
-                        password.clear()
-                        original_a += 1
-                        Skip = True
-                        break
-                else:
-                    password.clear()
-                    original_a += 1
-                    Skip = True
-                    break
-                
-                if len(output) == 10000:
-                    Finish = True
-                    break
-            print(password)
-        if Skip or Finish:
-            break
-print(original_a)
+n = 1
+while True:
+    if execute(bl, n):
+        print(n)
+        break
+    n += 1
