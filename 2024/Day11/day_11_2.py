@@ -5,7 +5,7 @@ stones = re.findall(r'\d+', stones)
 
 total_blink_time = 75
 
-# This will mutate a given stone number as per the rules. Do it math style for speed.
+# Get what the stone will change after one blink
 def Change(stone):
     if stone == '0':
         return ['1']
