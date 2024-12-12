@@ -10,7 +10,7 @@ for line in f:
     regions_check.append([False]*len(line))
 f.close()
 
-def get_plant(x, y, garden, area):
+def GetPlant(x, y, garden, area):
     plant = None
     if 0 <= x < len(garden) and 0 <= y < len(garden[0]):
         if (x, y) in area:
@@ -53,26 +53,20 @@ for i in range(len(garden)):
                 # a tip of a row -> 2 sides
                 elif num_neighbours == 1:
                     sides += 2
-                else:
+                else: # Has at least 2 neighbour in the same area. 
+                    # detect if pos is at corner
                     x, y = pos
                     plant = garden[x][y]
                     for dx, dy in diagonals:
                         nx, ny = x + dx, y + dy
         
-                        diagonal_plant = get_plant(nx, ny, garden, area)
-                        p1 = get_plant(nx, y, garden, area)
-                        p2 = get_plant(x, ny, garden, area)
+                        diagonal_plant = GetPlant(nx, ny, garden, area)
+                        p1 = GetPlant(nx, y, garden, area)
+                        p2 = GetPlant(x, ny, garden, area)
         
                         # If plant on diagonal position is different, either inside or outside corner
-                        if diagonal_plant != plant:
-                            # Inside corner
-                            if p1 == plant and p2 == plant:
-                                sides += 1
-                            # Outside corner
-                            elif p1 != plant and p2 != plant:
-                                sides += 1
-                        elif p1 != plant and p2 != plant:
-                            sides += 1                
+                        if (diagonal_plant != plant and p1 == plant and p2 == plant) or (p1 != plant and p2 != plant):
+                            sides += 1               
             region_info.append({'plant': plant, 'area': len(area), 'sides': sides})            
 
 
