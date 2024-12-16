@@ -1,6 +1,4 @@
 import re
-from functools import reduce
-import operator
 
 f = open("day_14_input.txt","r")
 
