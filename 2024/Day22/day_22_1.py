@@ -8,7 +8,6 @@ def mix(number, value):
 def prune(number):
     return number % 16777216
 
-numbers = []
 total = 0
 for n in f:
     n = int(n.strip())
